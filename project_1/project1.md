@@ -67,7 +67,7 @@ I ran this Monte Carlo simulation on flip3.
 
 # 2. Actual Probability
 
-I choose the one with maximum number of trials to get the actual probability. As it can be seen in Table 1, the actual probability is about $29.1%$. Since in Monte Carlo simulation, with the number of trails increasing, the probability will be more reliable and close to the true probability.
+I choose the one with maximum number of trials to get the actual probability. As it can be seen in Table 1, the actual probability is about $29.1\%$. Since in Monte Carlo simulation, with the number of trails increasing, the probability will be more reliable and close to the true probability.
 
 # 3. Parallel Fraction Computation
 
@@ -83,13 +83,13 @@ Where $P_1$ and $P_n$ stand for Performance.
 
 Using number of trails equaling to 100000 to calculate the parallel fraction as a example.
 
-$$F_{p,2} = \frac{n}{(n-1)}\frac{P_n-P_1}{P_n} = \frac{2}{(2-1)}\frac{30.47-15.34}{30.34}=0.99736$$
+$$F_{p,2} = \frac{n}{(n-1)}\frac{P_n-P_1}{P_n} = \frac{2}{(2-1)}\frac{30.47-15.34}{30.47}=0.99311$$
 
 $$F_{p,4} = \frac{n}{(n-1)}\frac{P_n-P_1}{P_n} = \frac{4}{(4-1)}\frac{60.83-15.34}{60.83}=0.99710$$
 
 $$F_{p,8} = \frac{n}{(n-1)}\frac{P_n-P_1}{P_n} = \frac{8}{(8-1)}\frac{89.46-15.34}{89.46}=0.94689$$
 
-$$\bar{F_p}=\frac{\sum_{i=2}^N F_{p,i}}{N-1} = \frac{0.99736+0.99710+0.94689}{3}=0.98045$$
+$$\bar{F_p}=\frac{\sum_{i=2}^N F_{p,i}}{N-1} = \frac{0.99311+0.99710+0.94689}{3}=0.9790$$
 
 And do calculations for all number of trials in Excel.
 
