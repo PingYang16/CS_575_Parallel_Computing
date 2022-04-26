@@ -1,11 +1,13 @@
 #include <stdio.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 #include <omp.h>
 
 // setting the number of threads:
 #ifndef NUMT
-#define NUMT        2
+#define NUMT        4
 #endif
 
 // setting the number of nodes:
@@ -26,21 +28,7 @@
 const float N = 2.5f;
 const float R = 1.2f;
 
-float
-Height( int iu, int iv )      // iu, iv = 0 .. NUMNODES-1
-{
-	float x = -1. + 2.*(float)iu / (float)(NUMNODES-1);
-	float y = -1. + 2.*(float)iv / (float)(NUMNODES-1);
-
-	float xn = pow( fabs(x), (double)N );
-	float yn = pow( fabs(y), (double)N );
-	float rn = pow( fabs(R), (double)N );
-	float r = rn - xn - yn;
-	if( r <= 0. )
-		return 0.;
-	float height = pow( r, 1./(double)N );
-	return height;
-}
+float Height( int, int ); // function prototype
 
 int
 main( int argc, char *argv[ ] )
@@ -49,7 +37,7 @@ main( int argc, char *argv[ ] )
 
 	// get ready to record the maximum performance and the volume:
 	double megaHeightsComputed = 0.;
-	double volume;
+	float volume;
 	double maxPerformance = 0.;
 
 	// the area of a single full-sized tile:
@@ -58,8 +46,6 @@ main( int argc, char *argv[ ] )
 	float fullTileArea = ( ( ( XMAX - XMIN )/(float)(NUMNODES-1) ) *
                            ( ( YMAX - YMIN )/(float)(NUMNODES-1) ) );
 
-	int end = NUMNODES - 1;
-
 	// looking for the maximum performance: 
 	for( int times = 0; times < NUMTIMES; times++ )
 	{
@@ -67,23 +53,23 @@ main( int argc, char *argv[ ] )
         
 		double time0 = omp_get_wtime();
 			
-		#pragma omp parallel for default(none) shared(fullTileArea, end) reduction(+:volume)
-        for( int i = 0; i < NUMNODES*NUMNODES; i++ )
-        {
+		#pragma omp parallel for default(none) shared(fullTileArea) reduction(+:volume)
+        for( int i = 0; i < NUMNODES * NUMNODES; i++ )
+        { 
             int iu = i % NUMNODES;
             int iv = i / NUMNODES;
             float z = Height( iu, iv );
             
             // determine the pin location
             double ratio = 1.;
-            if( iu == 0 || iu == end || iv == 0 || iv == end )
+            if( iu == 0 || iu == NUMNODES-1 || iv == 0 || iv == NUMNODES-1 )
                 ratio = 0.5;
-            if( (iu ==0 && iv ==0) || (iu == end && iv == end)|| (iu == end && iv == 0) || (iu == 0 && iv == end) )
+            if( (iu ==0 && iv ==0) || (iu == NUMNODES-1 && iv == NUMNODES-1)|| (iu == NUMNODES-1 && iv == 0) || (iu == 0 && iv == NUMNODES-1) )
                 ratio = 0.25;
             
             // compute the volume
             volume += 2. * z * ratio * fullTileArea;
-        } // for ( parrallel computing # of nodes )
+        } // for ( parallel computing # of nodes )
 		
         double time1 = omp_get_wtime();
         double megaHeightsComputed = NUMNODES * NUMNODES / ( time1 - time0 ) / 1000000.;
@@ -96,3 +82,18 @@ main( int argc, char *argv[ ] )
 	
 }
 
+float
+Height( int iu, int iv )      // iu, iv = 0 .. NUMNODES-1
+{
+    float x = -1. + 2.*(float)iu / (float)(NUMNODES-1);
+    float y = -1. + 2.*(float)iv / (float)(NUMNODES-1);
+
+    float xn = pow( fabs(x), (double)N );
+    float yn = pow( fabs(y), (double)N );
+    float rn = pow( fabs(R), (double)N );
+    float r = rn - xn - yn;
+    if( r <= 0. )
+        return 0.;
+    float height = pow( r, 1./(double)N );
+    return height;
+}
