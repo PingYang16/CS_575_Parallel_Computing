@@ -15,6 +15,5 @@ by [Mike Bailey](https://eecs.oregonstate.edu/people/bailey-mike)
 | 4              | Vectorized Array Multiplication and Reduction using SSE |
 | 5              | CUDA: Monte Carlo Simulation                            |
 | 6              | OpenCL Array Multiplication and Reduction               |
-| 7A             | OpenCL/OpenGL Particle System                           |
-| 7B             | MPI Autocorrelation                                     |
+| 7              | MPI Autocorrelation                                     |
 | 575-only paper | Paper Analysis Project                                  |
